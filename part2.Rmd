@@ -1,0 +1,77 @@
+---
+title: "Statistical Inference Coursera Project - Part 2"
+author: "Nick Horne"
+date: "25 September 2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+## Overview
+
+Now in the second portion of the project, we're going to analyze the ToothGrowth data in the R datasets package. This data looks at the `Effect of Vitamin C on Tooth Growth in Guinea Pigs`
+
+#### 1. Load the ToothGrowth data and perform some basic exploratory data analyses
+
+```{r}
+# Load the data
+data(ToothGrowth)
+
+head(ToothGrowth)
+summary(ToothGrowth)
+```
+
+#### 2. Provide a basic summary of the data.
+
+The data contains 3 variables `len` - The length of odontoblasts (cells responsible for tooth growth). `supp` - Orange juice (OJ) or ascorbic acid (VC) or `dose` - The dose levels of vitamin C (mg/day).
+
+```{r}
+table(ToothGrowth$dose)
+
+# Convert it to a factor
+ToothGrowth$dose <- as.factor(ToothGrowth$dose)
+```
+
+The dose levels are either 0.5, 1 or 2 (mg/day) and are equaliy distrubuted amongs the 60 observations. There are 30 observations for each suppliment.
+
+```{r}
+aggregate(len~supp+dose, data=ToothGrowth, length)
+```
+
+There are 10 observations for each combination of dose and suppliment.
+
+```{r}
+plot <- ggplot(ToothGrowth, 
+               aes(x=factor(dose),y=len,fill=factor(dose)))
+plot + geom_boxplot(notch=F) + facet_grid(.~supp) +
+     xlab("Dosage (mg per day)") +   
+     ylab("Length of Tooth cell") +  
+     ggtitle("Effect of Dosage and Supplement Type on Tooth Growth")
+```
+
+The graph shows that both suppliments increase tooth cell length with dosage with the orange juice being more effective at lower dosages. 
+
+#### 3. Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. (Only use the techniques from class, even if there's other approaches worth considering)
+
+```{r}
+t.test(ToothGrowth[ToothGrowth$supp=="OJ",]$len, ToothGrowth[ToothGrowth$supp=="VC",]$len, paired = FALSE, var.equal = FALSE)
+```
+
+#### 4. State your conclusions and the assumptions needed for your conclusions.
+
+Findings:
+
+* Higher doses of vitamin C result in a longer total cell length regardless of the suppliment
+* Orange juice is more effective at lower levels when compared to the ascorbic acid. 
+* The orange juice effectiveness seems to tail off at higher dose levels
+
+These findings are based on the assumptions:
+
+* The guinea pigs were randomly assigned and representative of the entite population
+
+
