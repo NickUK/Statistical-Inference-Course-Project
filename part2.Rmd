@@ -3,8 +3,8 @@ title: "Statistical Inference Coursera Project - Part 2"
 author: "Nick Horne"
 date: "25 September 2017"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -58,17 +58,24 @@ The graph shows that both suppliments increase tooth cell length with dosage wit
 
 #### 3. Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. (Only use the techniques from class, even if there's other approaches worth considering)
 
+From the data it seems like the OJ suppliment has an increased effect but this tails off at higher levels. Lets look at it statistically and perform a t-test.
+
 ```{r}
-t.test(ToothGrowth[ToothGrowth$supp=="OJ",]$len, ToothGrowth[ToothGrowth$supp=="VC",]$len, paired = FALSE, var.equal = FALSE)
+suppTest <- t.test(ToothGrowth[ToothGrowth$supp=="OJ",]$len, 
+       ToothGrowth[ToothGrowth$supp=="VC",]$len, 
+       paired = FALSE, 
+       var.equal = FALSE)
+suppTest
 ```
+
+Given the resulting p value `r round(suppTest$p.value, 3)` we cannot be certain that the supplimentery results are not due to chance.
 
 #### 4. State your conclusions and the assumptions needed for your conclusions.
 
 Findings:
 
-* Higher doses of vitamin C result in a longer total cell length regardless of the suppliment
-* Orange juice is more effective at lower levels when compared to the ascorbic acid. 
-* The orange juice effectiveness seems to tail off at higher dose levels
+* Higher doses of vitamin C result in a longer total cell length regardless of the suppliment.
+* Orange juice appears to be more effective at lower levels when compared to the ascorbic acid and the orange juice effectiveness seems to tail off at higher dose levels. However with the data provided we cannot prove this is the case statistically and not just down to chance.
 
 These findings are based on the assumptions:
 
